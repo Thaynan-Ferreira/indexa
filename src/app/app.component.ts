@@ -36,8 +36,17 @@ export class AppComponent {
 
   filtroPorTexto: string = '';
 
-  filtrarContatosPorLetraInicial(letra: string): Contato[] {
+  filtrarContatosPorTexto(): Contato[] {
+    if (!this.filtroPorTexto) {
+      return this.contatos;
+    }
     return this.contatos.filter(contato => {
+      return contato.nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(this.filtroPorTexto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase());
+    });
+  }
+
+  filtrarContatosPorLetraInicial(letra: string): Contato[] {
+    return this.filtrarContatosPorTexto().filter(contato => {
       return contato.nome.toLowerCase().startsWith(letra.toLowerCase());
     });
   }
